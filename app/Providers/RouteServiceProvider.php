@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Question;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +31,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::bind('publishedQuestion', function ($value){
+            return Question::published()->findOrFail($value);
+        });
 
         parent::boot();
     }
