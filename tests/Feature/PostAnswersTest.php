@@ -16,9 +16,8 @@ class PostAnswersTest extends TestCase
     {
         $question = factory(Question::class)->state('published')->create();
         $user = factory(User::class)->create();
-
+        $this->actingAs($user);
         $response = $this->post("questions/{$question->id}/answers", [
-            'user_id' => $user->id,
             'content' => 'First answer',
         ]);
 
@@ -34,14 +33,30 @@ class PostAnswersTest extends TestCase
     {
         $unpublishedQuestion = factory(Question::class)->state('unpublished')->create();
         $user = factory(User::class)->create();
+        $this->actingAs($user);
 
         $response = $this->withExceptionHandling()
             ->post("questions/{$unpublishedQuestion->id}/answers", [
-            'user_id' => $user->id,
-            'content' => 'First answer',
+                'content' => 'First answer',
             ])->assertStatus(404);
 
         $this->assertDatabaseMissing('answers', ['question_id' => $unpublishedQuestion->id]);
         $this->assertEquals(0, $unpublishedQuestion->answers()->count());
+    }
+
+    /** @test */
+    public function content_is_required_when_post_answer()
+    {
+        $question = factory(Question::class)->state('published')->create();
+        $user = factory(User::class)->create();
+        $this->actingAs($user);
+        $response = $this->withExceptionHandling()
+            ->post("questions/{$question->id}/answers", [
+                'content' => null,
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors('content');
+
     }
 }

@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AnswerRequest;
 use App\Question;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AnswersController extends Controller
 {
-    public function store(Question $question, Request $request)
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    public function store(Question $question, AnswerRequest $request)
     {
         $question->answers()->create([
-            'user_id' => $request->input('user_id'),
+            'user_id' => Auth::user()->id,
             'content' => $request->input('content'),
         ]);
 
