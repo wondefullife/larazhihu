@@ -13,3 +13,15 @@ $factory->define(Question::class, function (Faker $faker) {
         'content' => $faker->sentence,
     ];
 });
+
+$factory->state(Question::class, 'published', function () {
+    return [
+        'published_at' => \Carbon\Carbon::parse('-1 day')
+    ];
+});
+
+$factory->state(Question::class, 'unpublished', function () {
+    return [
+        'published_at' => null
+    ];
+});
