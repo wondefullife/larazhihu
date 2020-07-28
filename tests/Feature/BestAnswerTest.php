@@ -48,7 +48,6 @@ class BestAnswerTest extends TestCase
         // 登录
         // 登陆者将答案标记为最佳答案失败
         $notCreator = create(User::class);
-        $user = factory(User::class)->create();
         $question = create(Question::class, ['user_id' => $notCreator->id]);
         $answer = create(Answer::class, ['question_id' => $question->id]);
         $this->signIn();
