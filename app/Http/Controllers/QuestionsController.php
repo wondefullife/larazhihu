@@ -13,7 +13,6 @@ class QuestionsController extends Controller
 
     public function show(Question $question)
     {
-
         return view('questions.show', [
             'question' => $question
         ]);
