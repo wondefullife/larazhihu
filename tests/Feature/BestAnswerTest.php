@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Answer;
 use App\Question;
 use App\User;
-use Illuminate\Auth\AuthenticationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
