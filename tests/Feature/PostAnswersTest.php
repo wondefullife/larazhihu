@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Question;
 use App\User;
+use Illuminate\Auth\AuthenticationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -20,8 +21,7 @@ class PostAnswersTest extends TestCase
         $response = $this->post("questions/{$question->id}/answers", [
             'content' => 'First answer',
         ]);
-
-        $response->assertStatus(201);
+        $response->assertStatus(302);
 
         $answer = $question->answers()->where('user_id', $user->id)->first();
         $this->assertNotNull($answer);
@@ -57,6 +57,16 @@ class PostAnswersTest extends TestCase
 
         $response->assertRedirect();
         $response->assertSessionHasErrors('content');
+    }
 
+    /** @test */
+    public function guest_can_not_post_an_answer()
+    {
+        $this->expectException(AuthenticationException::class);
+        $publishedQuestion = factory(Question::class)->state('published')->create();
+
+        $this->post("questions/{$publishedQuestion->id}/answers", [
+                'content' => 'First answer',
+        ]);
     }
 }
