@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
+    protected $fillable = [
+        'best_answer_id'
+    ];
     protected $casts = [
-        'published_at' => 'datetime'
+        'published_at' => 'datetime',
     ];
     public function answers()
     {
@@ -18,5 +21,12 @@ class Question extends Model
     public function scopePublished(Builder $query)
     {
         return $query->whereNotNull('published_at');
+    }
+
+    public function markAsBestAnswer(Answer $answer)
+    {
+        $this->update([
+            'best_answer_id' => $answer->id
+        ]);
     }
 }
