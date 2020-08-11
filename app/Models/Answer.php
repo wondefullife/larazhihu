@@ -20,8 +20,18 @@ class Answer extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function votes($type)
+    {
+        return $this->morphMany(Vote::class, 'voted')->whereType($type);
+    }
+
     public function isBest()
     {
         return $this->id == $this->question->best_answer_id;
+    }
+
+    public function voteUp(User $user)
+    {
+        $this->votes('vote_type')->create(['user_id' => $user->id]);
     }
 }
