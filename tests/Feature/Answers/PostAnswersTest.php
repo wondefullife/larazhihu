@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Answers;
 
-use App\Question;
-use App\User;
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Auth\AuthenticationException;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;

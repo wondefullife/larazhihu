@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Answer;
+use App\Models\Answer;
 use App\Http\Requests\AnswerRequest;
-use App\Question;
+use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
 
 class AnswersController extends Controller

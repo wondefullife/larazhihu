@@ -2,9 +2,9 @@
 
 namespace Tests\Unit;
 
-use App\Answer;
-use App\Question;
-use App\User;
+use App\Models\Answer;
+use App\Models\Question;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
