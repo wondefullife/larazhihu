@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Answer;
 use App\Question;
 use App\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -47,5 +48,14 @@ class QuestionTest extends TestCase
         $question->markAsBestAnswer($answer);
 
         $this->assertEquals($question->best_answer_id, $answer->id);
+    }
+
+    /** @test */
+    public function a_question_belongs_to_a_creator()
+    {
+        $question = create(Question::class);
+
+        $this->assertInstanceOf(BelongsTo::class, $question->creator());
+        $this->assertInstanceOf(User::class, $question->creator);
     }
 }
