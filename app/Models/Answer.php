@@ -30,8 +30,13 @@ class Answer extends Model
         return $this->id == $this->question->best_answer_id;
     }
 
-    public function voteUp(User $user)
+    public function voteUp($user)
     {
-        $this->votes('vote_type')->create(['user_id' => $user->id]);
+        $this->votes('vote_up')->create(['user_id' => $user->id]);
+    }
+
+    public function cancelVoteUp($user)
+    {
+        $this->votes('vote_up')->where(['user_id' => $user->id])->delete();
     }
 }
