@@ -58,4 +58,29 @@ class UpVotesTest extends TestCase
 
         $this->assertCount(1, $answer->refresh()->votes('vote_up')->get());
     }
+
+    /** @test */
+    public function can_know_it_is_vote_up()
+    {
+        $this->signIn();
+        $answer = create(Answer::class);
+        $this->post("/answers/{$answer->id}/up-votes");
+
+        $this->assertTrue($answer->refresh()->isVotedUp(auth()->user()));
+    }
+
+    /** @test */
+    public function can_know_up_votes_count()
+    {
+        $answer = create(Answer::class);
+
+        $this->signIn();
+        $this->post("/answers/{$answer->id}/up-votes");
+        $this->assertEquals(1, $answer->refresh()->upVotesCount);
+
+
+        $this->signIn();
+        $this->post("/answers/{$answer->id}/up-votes");
+        $this->assertEquals(2, $answer->refresh()->upVotesCount);
+    }
 }

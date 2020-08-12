@@ -3,8 +3,8 @@
 namespace Tests\Unit;
 
 use App\Models\Answer;
-use App\Models\Question;
 use App\Models\User;
+use App\Models\Vote;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -77,5 +77,20 @@ class AnswerTest extends TestCase
             'voted_type' => get_class($answer),
             'type' => 'vote_up',
         ]);
+    }
+
+    /** @test */
+    public function can_know_it_is_vote_up()
+    {
+        $user = create(User::class);
+        $answer = create(Answer::class);
+
+        create(Vote::class, [
+            'user_id' => $user->id,
+            'voted_type' => get_class($answer),
+            'voted_id' => $answer->id,
+        ]);
+
+        $this->assertTrue($answer->refresh()->isVotedUp($user));
     }
 }
