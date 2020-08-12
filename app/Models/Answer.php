@@ -33,7 +33,14 @@ class Answer extends Model
     public function voteUp($user)
     {
         if ($this->votes('vote_up')->where(['user_id' => $user->id])->doesntExist()) {
-            $this->votes('vote_up')->create(['user_id' => $user->id]);
+            $this->votes('vote_up')->create(['user_id' => $user->id, 'type' => 'vote_up']);
+        }
+    }
+
+    public function voteDown($user)
+    {
+        if ($this->votes('vote_down')->where(['user_id' => $user->id])->doesntExist()) {
+            $this->votes('vote_down')->create(['user_id' => $user->id, 'type' => 'vote_down']);
         }
     }
 
