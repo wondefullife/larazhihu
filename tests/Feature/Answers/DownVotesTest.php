@@ -3,81 +3,27 @@
 namespace Tests\Feature\Answers;
 
 use App\Models\Answer;
+use Tests\Feature\VoteDownContractTest;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class DownVotesTest extends TestCase
 {
     use RefreshDatabase;
+    use VoteDownContractTest;
 
-    /** @test */
-    public function guest_can_not_down_vote()
+    protected function getVoteDownUri($model = null)
     {
-        $this->withExceptionHandling()
-            ->post("/answers/1/down-votes")
-            ->assertRedirect('/login');
+        return $model ? "/answers/{$model->id}/down-votes" :"/answers/1/down-votes" ;
     }
 
-    /** @test */
-    public function authenticated_user_can_down_vote()
+    protected function downVotes($model)
     {
-        $this->signIn();
-        $answer = create(Answer::class);
-        $this->post("/answers/{$answer->id}/down-votes")
-            ->assertStatus(201);
-
-        $this->assertCount(1, $answer->refresh()->votes('vote_down')->get());
+        return $model->refresh()->votes('vote_down')->get();
     }
 
-    /** @test */
-    public function an_authenticated_user_can_cancel_down_vote()
+    protected function getModel()
     {
-        $this->signIn();
-
-        $answer = create(Answer::class);
-        $this->post("/answers/{$answer->id}/down-votes");
-        $this->assertCount(1, $answer->refresh()->votes('vote_down')->get());
-
-        $this->delete("/answers/{$answer->id}/down-votes");
-        $this->assertCount(0, $answer->refresh()->votes('vote_down')->get());
-    }
-
-    /** @test */
-    public function can_vote_down_only_once()
-    {
-        $this->signIn();
-        $answer = create(Answer::class);
-
-        try {
-            $this->post("/answers/{$answer->id}/down-votes");
-            $this->post("/answers/{$answer->id}/down-votes");
-        } catch (\Exception $e) {
-            $this->fail("Can't vote down twice");
-        }
-        $this->assertCount(1, $answer->refresh()->votes('vote_down')->get());
-    }
-
-    /** @test */
-    public function can_known_it_is_vote_down()
-    {
-        $this->signIn();
-        $answer = create(Answer::class);
-        $this->post("/answers/{$answer->id}/down-votes");
-
-        // 这里注意要 refresh 重新读取数据一下
-        $this->assertTrue($answer->refresh()->isVotedDown(auth()->user()));
-    }
-
-    /** @test */
-    public function can_known_votes_down_count()
-    {
-        $answer = create(Answer::class);
-        $this->signIn();
-        $this->post("/answers/{$answer->id}/down-votes");
-
-        $this->signIn();
-        $this->post("/answers/{$answer->id}/down-votes");
-
-        $this->assertEquals(2, $answer->downVotesCount);
+        return Answer::class;
     }
 }
