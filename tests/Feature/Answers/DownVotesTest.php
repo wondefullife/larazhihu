@@ -56,4 +56,28 @@ class DownVotesTest extends TestCase
         }
         $this->assertCount(1, $answer->refresh()->votes('vote_down')->get());
     }
+
+    /** @test */
+    public function can_known_it_is_vote_down()
+    {
+        $this->signIn();
+        $answer = create(Answer::class);
+        $this->post("/answers/{$answer->id}/down-votes");
+
+        // 这里注意要 refresh 重新读取数据一下
+        $this->assertTrue($answer->refresh()->isVotedDown(auth()->user()));
+    }
+
+    /** @test */
+    public function can_known_votes_down_count()
+    {
+        $answer = create(Answer::class);
+        $this->signIn();
+        $this->post("/answers/{$answer->id}/down-votes");
+
+        $this->signIn();
+        $this->post("/answers/{$answer->id}/down-votes");
+
+        $this->assertEquals(2, $answer->downVotesCount);
+    }
 }
