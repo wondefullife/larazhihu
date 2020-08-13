@@ -49,6 +49,11 @@ class Answer extends Model
         $this->votes('vote_up')->where(['user_id' => $user->id])->delete();
     }
 
+    public function cancelVoteDown($user)
+    {
+        $this->votes('vote_down')->where('user_id', $user->id)->delete();
+    }
+
     public function isVotedUp(User $user)
     {
         if (!$user) {
