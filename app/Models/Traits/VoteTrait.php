@@ -2,7 +2,6 @@
 
 namespace App\Models\Traits;
 
-use App\Models\User;
 use App\Models\Vote;
 
 trait VoteTrait
@@ -44,7 +43,7 @@ trait VoteTrait
         $this->cancelVote($user, 'vote_down');
     }
 
-    protected function isVoted(User $user, $type)
+    protected function isVoted($user, $type)
     {
         if (!$user) {
             return false;
@@ -52,12 +51,12 @@ trait VoteTrait
         return $this->votes($type)->where('user_id', $user->id)->exists();
     }
 
-    public function isVotedUp(User $user)
+    public function isVotedUp($user)
     {
         return $this->isVoted($user, 'vote_up');
     }
 
-    public function isVotedDown(User $user)
+    public function isVotedDown($user)
     {
         return $this->isVoted($user, 'vote_down');
     }

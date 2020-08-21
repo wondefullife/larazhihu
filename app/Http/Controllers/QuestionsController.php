@@ -13,6 +13,11 @@ class QuestionsController extends Controller
 
     public function show(Question $question)
     {
+        $answers = $question->answers()->paginate(20);
+        array_map(function (&$item) {
+            return $this->appendVotedAttribute($item);
+        }, $answers->items());
+
         return view('questions.show', [
             'question' => $question,
             'answers' => $question->answers()->paginate(20),

@@ -13,6 +13,11 @@ class Answer extends Model
         'user_id', 'content', 'question_id'
     ];
 
+    protected $appends = [
+        'upVotesCount',
+        'downVotesCount'
+    ];
+
     public function question()
     {
         return $this->belongsTo(Question::class);
